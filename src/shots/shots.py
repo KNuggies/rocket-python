@@ -9,6 +9,7 @@ from rlbot.utils.game_state_util import GameState, BallState, CarState, Physics,
 # Reset Shot on Bounce
 # Track the number of tries
 
+# TODO: Create separate file for Debug class
 class Debug:
     def __init__(self):
         pass
@@ -52,6 +53,7 @@ class Shot:
 
     def transform_location(self):
         # TODO Deal with corner cases (car in the corner)
+        
         dx = random.randint(-3000, 3000)
         dy = random.randint(0, 3000)
 
