@@ -5,6 +5,8 @@ from rlbot.messages.flat.QuickChatSelection import QuickChatSelection
 from rlbot.utils.game_state_util import GameState, BallState, CarState, Physics, Vector3, Rotator
 from rlbot.utils.structures.game_data_struct import GameTickPacket
 
+from shots.shots import Shot
+
 from util.ball_prediction_analysis import find_slice_at_time
 from util.boost_pad_tracker import BoostPadTracker
 from util.drive import steer_toward_target
@@ -47,41 +49,21 @@ class MyBot(BaseAgent):
         ball_location = Vec3(packet.game_ball.physics.location)
         # print(f'Ball Location: <{ball_location.x:8.2f}, {ball_location.y:8.2f}, {ball_location.z:8.2f}>')
         
-        # TODO: Flip Indicator
-        # Reset Shot on Bounce
-        # Track the number of tries
-        # Find better game state to reset shot to enable replays
-        # Transform Pop Aerial to various start locations
+        # TODO:
         # Create Debug Info for Printing messages
+        # Flip Indicator
+        # Find better game state to reset shot to enable replays
 
         # Define Shot
-        ball = BallState(
-                    physics=Physics(
-                        location = Vector3(0.0, -1800.0, 1000.0),
-                        velocity = Vector3(0.0, -1000.0, 0.0),
-                        rotation = Vector3(0, 0, 0),
-                        angular_velocity = Vector3(0, 0, 0)
-                    )
-                )
-        cars = {
-            player_index: CarState(
-                physics=Physics(
-                    location = Vector3(0.0, -5000.0, 17.02),
-                    velocity = Vector3(0.0, 0.0, -0.0001),
-                    rotation = Vector3(0, pi/2, 0), # (pitch, yaw, roll) in car fame
-                    angular_velocity = Vector3(0, 0, 0)
-                ),
-                boost_amount=100.0
-            )
-        }
-
         if not packet.game_info.is_round_active:
+            loaded = True
             # print("Not active (includes pause state)")
             self.renderer.draw_string_3d(player_location, 3, 3, 'Ball Reset', self.renderer.white())
             # Set Shot
+            shot = Shot(player_index, True)
             state = GameState(
-                ball = ball,
-                cars = cars
+                ball = shot.ball,
+                cars = shot.cars
             )
             self.set_game_state(state)
 
