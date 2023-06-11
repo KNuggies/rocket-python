@@ -20,6 +20,7 @@ class MyBot(BaseAgent):
         super().__init__(name, team, index)
         self.active_sequence: Sequence = None
         self.boost_pad_tracker = BoostPadTracker()
+        self.has_jumped = False
 
     def initialize_agent(self):
         # Set up information about the boost pads now that the game is active and the info is available
@@ -54,9 +55,12 @@ class MyBot(BaseAgent):
         # Flip Indicator
         # Find better game state to reset shot to enable replays
 
+        if not self.has_jumped and player_location.z > 100:
+            self.has_jumped = True
+
         # Define Shot
-        if not packet.game_info.is_round_active:
-            loaded = True
+        if not packet.game_info.is_round_active and self.has_jumped:
+            self.has_jumped = False
             # print("Not active (includes pause state)")
             self.renderer.draw_string_3d(player_location, 3, 3, 'Ball Reset', self.renderer.white())
             # Set Shot
